@@ -28,6 +28,9 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
+      - name: Agregar paquetes Source privado
+        run: nuget sources add -name "Paquetes" -Source "https://nuget.pkg.github.com/SC-701/index.json"
+
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1
 
