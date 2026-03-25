@@ -19,11 +19,24 @@ namespace Web.Pages.Productos
 
         public async Task OnGet()
         {
-            string endpoint = _configuration.ObtenerMetodo("APIEnpoints","ObtenerProductos");
+
+            string urlBase = _configuration.ObtenerValor("APIEnpoints", "UrlBase");
+            string endpoint = _configuration.ObtenerMetodo("APIEnpoints", "ObtenerProductos");
+            Console.WriteLine($"{urlBase}{endpoint}");
+
+            if (string.IsNullOrEmpty(urlBase))
+                throw new Exception("UrlBase está vacía");
+
+            if (string.IsNullOrEmpty(endpoint))
+                throw new Exception("Endpoint está vacío");
+
             var cliente = new HttpClient();
-            var solicitud = new HttpRequestMessage(HttpMethod.Get, endpoint);
-            var respuesta = await cliente.SendAsync(solicitud);
+
+            cliente.BaseAddress = new Uri(urlBase);
+            var respuesta = await cliente.GetAsync(endpoint);
+
             respuesta.EnsureSuccessStatusCode();
+
             var resultado = await respuesta.Content.ReadAsStringAsync();
             var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
